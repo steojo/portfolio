@@ -1,31 +1,8 @@
 (() => {
   const root = document.documentElement;
-  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const $ = (sel, el = document) => el.querySelector(sel);
   const $$ = (sel, el = document) => [...el.querySelectorAll(sel)];
-  const EMAIL = 'stephen@example.com';
-
-  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
-  const scrollToId = (id) => document.getElementById(id)?.scrollIntoView({ behavior: reduceMotion.matches ? 'auto' : 'smooth' });
-
-  /* ----------------------------------------------------------------
-     Theme: black on white or white on black
-  ----------------------------------------------------------------- */
-  const THEMES = ['dark', 'light'];
-  const themeBtn = $('#theme-toggle');
-
-  function setTheme(name) {
-    if (!THEMES.includes(name)) return false;
-    root.dataset.theme = name;
-    try { localStorage.setItem('theme', name); } catch {}
-    const other = name === 'dark' ? 'light' : 'dark';
-    themeBtn.setAttribute('aria-label', `Invert colours, switch to ${other} screen`);
-    $('meta[name="theme-color"]').content = name === 'dark' ? '#000000' : '#ffffff';
-    renderPortrait();
-    return true;
-  }
-
-  themeBtn.addEventListener('click', () => setTheme(root.dataset.theme === 'dark' ? 'light' : 'dark'));
+  const EMAIL = 'ojogbedestephen@gmail.com';
 
   /* ----------------------------------------------------------------
      Status bar clock and current section
@@ -52,250 +29,86 @@
   setCurrent('home');
 
   /* ----------------------------------------------------------------
-     Intro: type the command, print the name, then the rest
+     Greeting: "Hey, " stays put while the rest is typed, held, backspaced
+     to the shared prefix and swapped for the next line, forever. The first
+     visit of a session types the first line from scratch, then reveals
+     the rest of the hero.
   ----------------------------------------------------------------- */
   const nameEl = $('.name');
+  const typed = $('.name__typed', nameEl);
+  const LINES = [typed.textContent, "Hey, let's build", "Hey, let's talk"]; // 16 characters at most, so the line never wraps
+  const heroSteps = $$('.hero [data-seq]');
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-  async function intro() {
-    if (!root.classList.contains('booting')) return;
+  let heroOnScreen = true;
+  new IntersectionObserver((entries) => { heroOnScreen = entries.at(-1).isIntersecting; }).observe(nameEl);
+
+  // like sleep, but holds while the greeting is scrolled away or the tab is hidden
+  async function hold(ms) {
+    await sleep(ms);
+    while (!heroOnScreen || document.hidden) await sleep(300);
+  }
+
+  async function typeTo(text) {
+    while (typed.textContent !== text) {
+      typed.textContent = text.slice(0, typed.textContent.length + 1);
+      await hold(typed.textContent.endsWith(',') ? 280 : 70 + Math.random() * 60);
+    }
+  }
+
+  async function eraseTo(length) {
+    while (typed.textContent.length > length) {
+      typed.textContent = typed.textContent.slice(0, -1);
+      await hold(45);
+    }
+  }
+
+  const sharedPrefix = (a, b) => { let i = 0; while (i < a.length && a[i] === b[i]) i++; return i; };
+
+  let booted = !root.classList.contains('booting');
+  const SKIP = ['keydown', 'pointerdown', 'wheel'];
+
+  function finishBoot() {
+    if (booted) return;
+    booted = true;
+    typed.textContent = LINES[0];
+    heroSteps.forEach((s) => s.classList.add('is-on'));
+    root.classList.remove('booting');
+    SKIP.forEach((type) => removeEventListener(type, finishBoot));
+  }
+
+  async function boot() {
     try { sessionStorage.setItem('booted', '1'); } catch {}
-
-    const steps = $$('.hero [data-seq]');
-    const typed = $('.typed');
-    const command = typed.textContent;
-    let skipped = false;
-
-    const finish = () => {
-      skipped = true;
-      typed.textContent = command;
-      steps.forEach((s) => s.classList.add('is-on'));
-      nameEl.classList.remove('is-printing');
-      root.classList.remove('booting');
-      removeEventListener('keydown', finish);
-      removeEventListener('pointerdown', finish);
-      removeEventListener('wheel', finish);
-    };
-    const wait = (ms) => (skipped ? Promise.resolve() : new Promise((r) => setTimeout(r, ms)));
-
-    addEventListener('keydown', finish, { once: true });
-    addEventListener('pointerdown', finish, { once: true });
-    addEventListener('wheel', finish, { once: true, passive: true });
-
+    SKIP.forEach((type) => addEventListener(type, finishBoot, { once: true, passive: true }));
     typed.textContent = '';
-    steps[0].classList.add('is-on');
-    await wait(300);
-    for (const ch of command) {
-      if (skipped) break;
-      typed.textContent += ch;
-      await wait(60 + Math.random() * 50);
-    }
-    await wait(180);
-    if (!skipped) nameEl.classList.add('is-on', 'is-printing');
-    await wait(560);
-    for (const step of steps.slice(2)) {
-      if (skipped) break;
+    nameEl.classList.add('is-on', 'is-typing');
+    await hold(500);
+    await typeTo(LINES[0]);
+    nameEl.classList.remove('is-typing');
+    await hold(450);
+    for (const step of heroSteps.slice(1)) {
+      if (booted) break;
       step.classList.add('is-on');
-      await wait(110);
+      await sleep(110);
     }
-    if (!skipped) finish();
+    finishBoot();
   }
 
-  intro();
-
-  /* ----------------------------------------------------------------
-     Terminal
-  ----------------------------------------------------------------- */
-  const term = $('.term');
-  const out = $('#term-out');
-  const form = $('#term-form');
-  const input = $('#term-in');
-  const mirror = $('#term-mirror');
-  const history = [];
-  let historyIndex = 0;
-  const MAX_ENTRIES = 5;
-
-  function renderMirror() {
-    const value = input.value;
-    const pos = input.selectionStart ?? value.length;
-    const cursor = document.createElement('span');
-    cursor.className = 'cursor';
-    cursor.textContent = value[pos] || ' ';
-    mirror.replaceChildren(document.createTextNode(value.slice(0, pos)), cursor, document.createTextNode(value.slice(pos + 1)));
-  }
-
-  ['input', 'keyup', 'click', 'select'].forEach((type) => input.addEventListener(type, renderMirror));
-  document.addEventListener('selectionchange', () => { if (document.activeElement === input) renderMirror(); });
-  input.addEventListener('focus', () => { term.classList.add('is-focused'); renderMirror(); });
-  input.addEventListener('blur', () => term.classList.remove('is-focused'));
-  term.addEventListener('click', (e) => { if (!e.target.closest('a, button')) input.focus({ preventScroll: true }); });
-
-  function print(command, lines) {
-    const entry = document.createElement('div');
-    entry.className = 'term__entry';
-    entry.innerHTML = `<p class="term__echo"><span class="ps1">~ $</span> ${esc(command)}</p>` +
-      lines.map((line) => (line.startsWith('<dl') ? line : `<p>${line}</p>`)).join('');
-    out.append(entry);
-    while (out.children.length > MAX_ENTRIES) out.firstElementChild.remove();
-  }
-
-  const rows = (pairs) => `<dl class="term__rows">${pairs.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>`;
-
-  const PROJECTS = ['ledgerline', 'dockside', 'tidepool', 'kiln', 'fieldnote'];
-
-  function openProject(name) {
-    const tab = document.getElementById(`tab-${name}`);
-    if (!tab) return false;
-    selectTab(tab);
-    scrollToId('work');
-    return true;
-  }
-
-  async function copyEmail() {
-    try {
-      await navigator.clipboard.writeText(EMAIL);
-      return true;
-    } catch {
-      return false;
+  async function greet() {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!booted) await boot();
+    for (let i = 0; ; i = (i + 1) % LINES.length) {
+      await hold(i === 0 ? 3200 : 2200);
+      const next = LINES[(i + 1) % LINES.length];
+      nameEl.classList.add('is-typing');
+      await eraseTo(sharedPrefix(typed.textContent, next));
+      await hold(260);
+      await typeTo(next);
+      nameEl.classList.remove('is-typing');
     }
   }
 
-  const COMMANDS = {
-    help: () => [
-      'Commands you can try:',
-      rows([
-        ['about', 'who I am and how I work'],
-        ['work', 'browse selected projects'],
-        ['open', 'open a project, for example open kiln'],
-        ['services', 'ways we can work together'],
-        ['contact', 'start a project'],
-        ['email', 'copy my email address'],
-        ['theme', 'dark or light screen'],
-        ['clear', 'clear the screen'],
-      ]),
-    ],
-    about: () => {
-      scrollToId('about');
-      return ['Twelve years writing software: four at a bank, three at a startup that was acquired, five independent.'];
-    },
-    whoami: () => ['Stephen, freelance software engineer. Next opening: January 2027.'],
-    work: () => {
-      scrollToId('work');
-      return ['Opening selected work. Next time try open dockside.'];
-    },
-    ls: () => [`${PROJECTS.map((p) => `${p}/`).join('  ')}  cv.txt  contact.txt`],
-    cat: ([file]) => {
-      if (!file) return ['cat: name a file, for example cat cv.txt'];
-      if (file === 'cv.txt') {
-        return [rows([
-          ['2021-now', 'Independent engineer'],
-          ['2018-2021', 'Staff engineer, Parcelwise (acquired)'],
-          ['2014-2018', 'Software engineer, Northgate Bank'],
-        ])];
-      }
-      if (file === 'contact.txt') return [`<a href="mailto:${EMAIL}">${EMAIL}</a>, or type contact to jump to the form.`];
-      if (PROJECTS.includes(file.replace(/\/$/, ''))) return [`cat: ${esc(file)} is a folder. Try open ${esc(file.replace(/\/$/, ''))}`];
-      return [`cat: ${esc(file)}: no such file. Type ls to see what's here.`];
-    },
-    open: ([name = '']) => {
-      const key = name.toLowerCase().replace(/\/$/, '');
-      if (openProject(key)) return [`Opening ${esc(key)}.`];
-      return [`open: no project called ${esc(name) || 'that'}. Choose from ${PROJECTS.join(', ')}.`];
-    },
-    services: () => {
-      scrollToId('services');
-      return ['Build, rescue, scale or advise. Scrolling to the details.'];
-    },
-    contact: () => {
-      scrollToId('contact');
-      return [`Next opening is January 2027. Write to <a href="mailto:${EMAIL}">${EMAIL}</a> or use the form.`];
-    },
-    email: async () => (await copyEmail())
-      ? [`Copied ${EMAIL} to your clipboard.`]
-      : [`Couldn't reach your clipboard. The address is <a href="mailto:${EMAIL}">${EMAIL}</a>.`],
-    theme: ([name]) => {
-      if (!name) return [`The screen is ${root.dataset.theme}. Type theme dark or theme light.`];
-      return setTheme(name.toLowerCase())
-        ? [`Switched to the ${esc(name.toLowerCase())} screen.`]
-        : [`theme: there's no ${esc(name)} here. Choose dark or light.`];
-    },
-    invert: () => COMMANDS.theme([root.dataset.theme === 'dark' ? 'light' : 'dark']),
-    date: () => [new Date().toString()],
-    echo: (args) => [esc(args.join(' '))],
-    history: () => (history.length ? [rows(history.map((h, i) => [String(i + 1), esc(h)]))] : ['No history yet.']),
-    sudo: () => ['stephen is not in the sudoers file. This incident will be reported.'],
-    rm: () => ['rm: this screen is read-only. Nothing was deleted.'],
-    exit: () => ['There is no exit, only the contact form. Type contact.'],
-    vim: () => ['No editors on this machine, so you can never get stuck in one.'],
-    coffee: () => ['Brewing. Back in four minutes.'],
-    hello: () => ['Hello. Type help to see what this terminal can do.'],
-  };
-  COMMANDS.hire = COMMANDS.contact;
-  COMMANDS.hi = COMMANDS.hello;
-  COMMANDS.logout = COMMANDS.exit;
-  COMMANDS.cd = () => ['cd: there is only one directory here, and you are in it.'];
-  COMMANDS.man = () => COMMANDS.help();
-  const NAVIGATES = new Set(['about', 'work', 'open', 'services', 'contact', 'hire']);
-
-  async function run(raw) {
-    const line = raw.trim();
-    if (!line) { print('', []); return; }
-    history.push(line);
-    historyIndex = history.length;
-    const [name, ...args] = line.split(/\s+/);
-    const key = name.toLowerCase();
-    if (key === 'clear') { out.replaceChildren(); return; }
-    const command = COMMANDS[key];
-    const lines = command
-      ? await command(args)
-      : [`${esc(name)}: command not found. Type help for the list.`];
-    print(line, lines);
-    if (!NAVIGATES.has(key)) form.scrollIntoView({ block: 'nearest' });
-  }
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const value = input.value;
-    input.value = '';
-    renderMirror();
-    await run(value);
-  });
-
-  $$('[data-run]').forEach((btn) => btn.addEventListener('click', () => run(btn.dataset.run)));
-
-  input.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-      if (!history.length) return;
-      e.preventDefault();
-      historyIndex = Math.max(0, Math.min(history.length, historyIndex + (e.key === 'ArrowUp' ? -1 : 1)));
-      input.value = history[historyIndex] ?? '';
-      requestAnimationFrame(() => { input.setSelectionRange(input.value.length, input.value.length); renderMirror(); });
-    } else if (e.key === 'Tab' && input.value.trim()) {
-      const [first, second] = input.value.split(/\s+/);
-      const pool = second === undefined ? Object.keys(COMMANDS) : first === 'open' ? PROJECTS : first === 'theme' ? THEMES : [];
-      const stem = (second ?? first).toLowerCase();
-      const matches = pool.filter((c) => c.startsWith(stem));
-      if (matches.length === 1) {
-        e.preventDefault();
-        input.value = second === undefined ? `${matches[0]} ` : `${first} ${matches[0]}`;
-        renderMirror();
-      }
-    } else if (e.key === 'l' && e.ctrlKey) {
-      e.preventDefault();
-      out.replaceChildren();
-    } else if (e.key === 'Escape') {
-      input.blur();
-    }
-  });
-
-  addEventListener('keydown', (e) => {
-    if (e.key !== '/' || e.metaKey || e.ctrlKey || e.altKey) return;
-    if (e.target.closest('input, textarea, select, [contenteditable]')) return;
-    e.preventDefault();
-    input.focus({ preventScroll: true });
-    term.scrollIntoView({ behavior: reduceMotion.matches ? 'auto' : 'smooth', block: 'center' });
-  });
-
-  renderMirror();
+  greet();
 
   /* ----------------------------------------------------------------
      Work browser (tabs with arrow-key navigation)
@@ -334,12 +147,11 @@
 
   // grid of brightness 0..1 (null = background) to text, ordered-dithered to one bit
   function toHalfBlocks(grid, cols, rows) {
-    const light = root.dataset.theme === 'light';
     const on = (x, y) => {
       const v = grid[y * cols + x];
       if (v === null) return 0;
       const t = (BAYER[y % 4][x % 4] + 0.5) / 16;
-      return (light ? v < t : v > t) ? 1 : 0;
+      return v > t ? 1 : 0;
     };
     let text = '';
     for (let r = 0; r < rows; r++) {
@@ -425,18 +237,11 @@
     img.src = portrait.dataset.src;
   }
 
-  setTheme(root.dataset.theme === 'light' ? 'light' : 'dark');
+  renderPortrait();
 
   /* ----------------------------------------------------------------
      Contact
   ----------------------------------------------------------------- */
-  const copyBtn = $('#copy-email');
-  copyBtn.addEventListener('click', async () => {
-    const ok = await copyEmail();
-    copyBtn.textContent = ok ? 'Copied' : 'Copy failed, select the address instead';
-    setTimeout(() => { copyBtn.textContent = 'Copy address'; }, 2200);
-  });
-
   const contactForm = $('#contact-form');
   const status = $('#form-status');
 
@@ -457,8 +262,12 @@
     if (!emailOk) { email.focus(); status.textContent = ''; return; }
     if (!messageOk) { message.focus(); status.textContent = ''; return; }
 
-    // Placeholder: send the form data to your form service here (Formspree, a serverless function, etc).
-    status.textContent = `Sent. I'll reply to ${email.value.trim()} within two working days.`;
-    contactForm.reset();
+    // GitHub Pages has no backend, so hand the message to the visitor's email app
+    const name = $('#f-name').value.trim();
+    const need = $('input[name="need"]:checked', contactForm)?.parentElement.textContent.trim() ?? 'Not sure yet';
+    const subject = name ? `New project from ${name}` : 'New project';
+    const body = `${message.value.trim()}\n\nWhat I need: ${need}\nReply to: ${email.value.trim()}`;
+    location.href = `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    status.textContent = `Opening your email app. If nothing opens, write to ${EMAIL}.`;
   });
 })();

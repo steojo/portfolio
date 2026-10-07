@@ -1,0 +1,59 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Overview
+
+Stephen Ojogbede's freelance portfolio: a single dark, monochrome page in the spirit of an old terminal, to be hosted on GitHub Pages. It is hand-written HTML, CSS and vanilla JS: three files and nothing else. There is no package.json, build step, framework, linter or test suite, so don't add any unless asked.
+
+To preview, serve the directory and open `http://localhost:8000`. Use this no-cache server rather than plain `python3 -m http.server`. That one sends no `Cache-Control`, so Chrome keeps running a stale `script.js` across ordinary reloads:
+
+```sh
+python3 -c "
+import http.server as s
+class NoCache(s.SimpleHTTPRequestHandler):
+    def end_headers(self):
+        self.send_header('Cache-Control', 'no-store')
+        super().end_headers()
+s.test(HandlerClass=NoCache, port=8000, bind='localhost')
+"
+```
+
+The page has three sections, each linked from the status bar: home (greeting, intro and portrait), work (the project browser) and contact.
+
+## How the pieces fit together
+
+**Boot before paint (`index.html` `<head>`).** An inline script runs before CSS paints. It adds `.js` to `<html>` and, on the first visit of a session (`sessionStorage.booted`, skipped under reduced motion), adds `.booting`. While `.booting` is set, CSS hides every `.hero [data-seq]` until JS adds `.is-on` to it. `boot()` in `script.js` types the first greeting line into `.name__typed`, then reveals the remaining steps. Any key, pointer or wheel event skips to the end, and a 4s timeout in the head script clears `.booting` in case JS fails. Later visits in the same session show everything at once.
+
+**Greeting loop.** After the boot, on every visit, `greet()` cycles through `LINES` forever ("Hey, I'm Stephen", "Hey, let's build", "Hey, let's talk"). It holds each line, backspaces only to the prefix it shares with the next line, then types the rest. The underscore stays solid while `.is-typing` is set and blinks while a line is held. `hold()` pauses the loop while the greeting is off-screen or the tab is hidden. Under reduced motion there is no loop and no blink; the HTML's "Hey, I'm Stephen" just stays.
+
+**`script.js`** is one IIFE split into commented sections: status bar, greeting, work browser, portrait and contact. The first `renderPortrait()` call sits at the end of the portrait section on purpose. It reads `const`/`let` bindings declared there, so calling it earlier would throw.
+
+**Colours.** The site is dark only. Colours are CSS custom properties in `:root`: black, white and a short grey ramp. `--dim` is for decoration only and should not be used for readable text.
+
+**Work browser.** An ARIA tablist with a roving tabindex and arrow/Home/End keys. Panels stay hidden only under `.js`, so without JS every project is visible.
+
+**Status bar.** An `IntersectionObserver` watches elements with `data-nav="<key>"` and sets `aria-current` on the `.status a[data-key="<key>"]` link with the same key.
+
+**Portrait.** `#portrait` is a `<pre>` filled with half-block characters (two pixels per character) using a 4×4 Bayer ordered dither. With no image it draws a procedural lit bust. Setting `data-src="photo.jpg"` on it makes the same pipeline dither that photo instead. It sits beside the intro in `.hero__side`, a fixed `24rem` grid column. `renderPortrait` sizes the grid from that parent's width, so the column must never shrink to fit its content (an `auto` track would lock the portrait at its minimum size). On narrow screens the grid shrinks rather than the glyphs. `ASPECT` (0.6 / 1.3) assumes Geist Mono's cell metrics.
+
+## Things that must stay in sync
+
+- **Adding or renaming a project.** It needs a tab `#tab-<slug>` and a panel `#panel-<slug>` in `index.html`. The section intro also says "Three products".
+- **Availability.** "Taking on new projects now" appears only in the contact section.
+- **Contact details.** The email is in the `EMAIL` constant in `script.js` and hard-coded in `index.html` only in the hero's envelope icon. The contact section deliberately doesn't show the address. The X handle (@steojodev) is only in the hero's X icon. Both icons are `.btn--icon` links with an `aria-label` and a `title`. There is no footer.
+- **What Stephen offers.** The hero lede and the contact form's "What do you need?" options both list the kinds of work. There is no separate services section.
+- **Hero greeting.** The first entry in `LINES` is read from the HTML in `.name__typed`, and an `.sr-only` copy carries the full name for screen readers and search engines, so the animation is hidden from them. Every line in `LINES` must be 16 characters or fewer. The greeting and lede are sized in `cqi` from the `.hero__intro` column. `.name__text` (`min(9.5cqi, 5.5rem)`) keeps 17 characters, including the underscore, on one line, and the lede stays about half that size. Recheck both if a line gets longer.
+- **ASCII art in `<pre>` blocks.** It is intentionally flush-left in the source, since indentation would render. Escape `>` as `&gt;`. Mark it `aria-hidden` and give it a text equivalent (`.sr-only`) when it carries meaning.
+
+## Conventions
+
+- Monochrome, Geist Mono everywhere, square corners, 1px hairlines. Animations use `steps()` timing to feel like a terminal redraw. Gate motion behind `@media (prefers-reduced-motion: no-preference)` in CSS.
+- Keep it lean. Stephen has cut gimmicks on purpose: the interactive terminal, the invert toggle, the ASCII name art, the services section, the toolbox list and the footer. Don't bring back novelty widgets or extra sections.
+- CSS classes are BEM-ish (`block__element`, `btn--solid`), and state classes use `is-*` (`is-active`, `is-on`, `is-typing`).
+- Copy voice: plain, short sentences, British spelling ("colours"), and no em dashes.
+- All copy describes Stephen's real work. Don't invent clients, testimonials, metrics or results. Don't mention years of experience or link to Upwork; Stephen asked to leave both out.
+
+## Contact form
+
+GitHub Pages has no backend. After validating, the form opens the visitor's email app with a `mailto:` link that has the subject and message filled in. To receive submissions directly, replace that in the submit handler in `script.js` with a call to a form service such as Formspree.

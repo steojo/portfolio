@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Stephen, freelance software engineer</title>
-  <meta name="description" content="Stephen is a freelance software engineer who designs, builds and rescues web software for startups and studios.">
+  <title>Stephen Ojogbede, freelance software engineer</title>
+  <meta name="description" content="Stephen Ojogbede is a UK freelance software engineer who builds SaaS products, mobile apps, AI agents and automations for founders and small teams.">
   <meta name="theme-color" content="#000000">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23000'/%3E%3Crect x='5' y='3' width='6' height='10' fill='%23ededed'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,8 +16,6 @@
       var d = document.documentElement;
       d.classList.add('js');
       try {
-        var t = localStorage.getItem('theme');
-        if (t === 'light' || t === 'dark') d.setAttribute('data-theme', t);
         if (!sessionStorage.getItem('booted') && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
           d.classList.add('booting');
           setTimeout(function () { d.classList.remove('booting'); }, 4000);
@@ -31,46 +29,29 @@
 
   <div class="page">
     <header class="hero" id="home" data-nav="home">
-      <div class="screen">
-        <p class="hero__cmd" data-seq><span class="ps1">~</span> <span class="ps1">$</span> <span class="typed">whoami</span></p>
-
-        <h1 class="name" data-seq>
-          <span class="sr-only">Stephen</span>
-          <pre class="name__art" style="--cols: 59" aria-hidden="true"><span class="name__shadow">       ╗        ╗       ╗      ╗   ╗    ╗       ╗   ╗     ╗
-  ╔════╝╚══  ╔══╝  ╔════╝  ╔══  ╗  ║    ║  ╔════╝    ╗    ║
-       ╗     ║        ╗        ╔╝       ║     ╗    ╔  ╗   ║
-╚════  ║     ║     ╔══╝    ╔═══╝   ╔══  ║  ╔══╝    ║╚  ╗  ║
-       ║     ║          ╗  ║       ║    ║       ╗  ║ ╚    ║
-╚══════╝   ╚═╝   ╚══════╝╚═╝     ╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝</span><span class="name__solid">███████ ████████ ███████ ██████  ██   ██ ███████ ███    ██
-██         ██    ██      ██   ██ ██   ██ ██      ████   ██
-███████    ██    █████   ██████  ███████ █████   ██ ██  ██
-     ██    ██    ██      ██      ██   ██ ██      ██  ██ ██
-███████    ██    ███████ ██      ██   ██ ███████ ██   ████
-</span></pre>
-        </h1>
-
-        <div class="hero__grid">
-          <div class="hero__intro">
-            <p class="hero__lede" data-seq>Freelance software engineer. I design, build and rescue web software for startups and studios.</p>
-            <p class="hero__sub" data-seq>Twelve years in and 47 projects shipped. Based in Lisbon, working with teams across Europe and the US. Booking new projects from January 2027.</p>
-            <div class="hero__actions" data-seq>
-              <a class="btn btn--solid" href="#contact">Start a project</a>
-              <a class="btn" href="#work">See selected work</a>
-            </div>
+      <div class="screen hero__grid">
+        <div class="hero__intro">
+          <h1 class="name" data-seq>
+            <span class="sr-only">Hey, I'm Stephen Ojogbede</span>
+            <span class="name__text" aria-hidden="true"><span class="name__typed">Hey, I'm Stephen</span><span class="name__cursor">_</span></span>
+          </h1>
+          <p class="hero__lede" data-seq>I build SaaS products, mobile apps, AI agents and automations for founders and small teams.</p>
+          <p class="hero__about" data-seq>Based in the UK, working with clients anywhere.</p>
+          <div class="hero__actions" data-seq>
+            <a class="btn btn--solid" href="#contact">Start a project</a>
+            <a class="btn" href="#work">See my work</a>
+            <a class="btn btn--icon" href="https://x.com/steojodev" aria-label="Stephen on X, @steojodev" title="@steojodev">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg>
+            </a>
+            <a class="btn btn--icon" href="mailto:ojogbedestephen@gmail.com" aria-label="Email ojogbedestephen@gmail.com" title="ojogbedestephen@gmail.com">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.75" d="M1.5 4.5h21v15h-21zM1.5 4.5 12 12.75 22.5 4.5"/></svg>
+            </a>
           </div>
+        </div>
 
-          <div class="term" data-seq>
-            <p class="term__bar" aria-hidden="true"><span>stephen@portfolio: ~</span><span>zsh</span></p>
-            <div class="term__out" id="term-out" aria-live="polite"></div>
-            <form class="term__line" id="term-form" autocomplete="off">
-              <span class="ps1" aria-hidden="true">~ $</span>
-              <span class="term__field">
-                <input id="term-in" type="text" aria-label="Terminal. Type help for a list of commands" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go">
-                <span class="term__mirror" id="term-mirror" aria-hidden="true"><span class="cursor"> </span></span>
-              </span>
-            </form>
-            <p class="term__try">Try <button type="button" data-run="help">help</button>, <button type="button" data-run="open kiln">open kiln</button> or <button type="button" data-run="theme light">theme light</button>.</p>
-          </div>
+        <div class="hero__side" data-seq>
+          <!-- Placeholder portrait. Add data-src="your-photo.jpg" and it will be converted to the same 1-bit dither. -->
+          <pre class="portrait" id="portrait" data-cols="56" data-rows="32" aria-hidden="true"></pre>
         </div>
       </div>
     </header>
@@ -80,224 +61,91 @@
         <div class="screen">
           <div class="section__head">
             <h2 class="h2" id="work-title">Selected work</h2>
-            <p class="section__intro">Five recent projects, from fintech plumbing to an app for swim schools. Pick one from the list to read about it.</p>
+            <p class="section__intro">Three products I designed, built and launched on my own. Pick one from the list to read about it.</p>
           </div>
 
           <div class="browser">
             <div class="browser__list" role="tablist" aria-label="Projects" aria-orientation="vertical">
-              <button class="browser__tab" role="tab" id="tab-ledgerline" aria-controls="panel-ledgerline" aria-selected="true"><span>Ledgerline</span><span class="browser__year">2025</span></button>
-              <button class="browser__tab" role="tab" id="tab-dockside" aria-controls="panel-dockside" aria-selected="false" tabindex="-1"><span>Dockside</span><span class="browser__year">2025</span></button>
-              <button class="browser__tab" role="tab" id="tab-tidepool" aria-controls="panel-tidepool" aria-selected="false" tabindex="-1"><span>Tidepool</span><span class="browser__year">2024</span></button>
-              <button class="browser__tab" role="tab" id="tab-kiln" aria-controls="panel-kiln" aria-selected="false" tabindex="-1"><span>Kiln</span><span class="browser__year">2024</span></button>
-              <button class="browser__tab" role="tab" id="tab-fieldnote" aria-controls="panel-fieldnote" aria-selected="false" tabindex="-1"><span>Fieldnote</span><span class="browser__year">2023</span></button>
+              <button class="browser__tab" role="tab" id="tab-postverse" aria-controls="panel-postverse" aria-selected="true"><span>Postverse</span><span class="browser__kind">web</span></button>
+              <button class="browser__tab" role="tab" id="tab-muna" aria-controls="panel-muna" aria-selected="false" tabindex="-1"><span>Muna</span><span class="browser__kind">ios</span></button>
+              <button class="browser__tab" role="tab" id="tab-foldr" aria-controls="panel-foldr" aria-selected="false" tabindex="-1"><span>Foldr</span><span class="browser__kind">ios</span></button>
               <p class="browser__hint" aria-hidden="true">Use &uarr; &darr; to browse</p>
             </div>
 
             <div class="browser__panels">
-              <article class="panel is-active" role="tabpanel" id="panel-ledgerline" aria-labelledby="tab-ledgerline" tabindex="0">
+              <article class="panel is-active" role="tabpanel" id="panel-postverse" aria-labelledby="tab-postverse" tabindex="0">
                 <div class="panel__text">
-                  <h3>Ledgerline</h3>
-                  <p class="panel__meta">Reconciliation platform for a Series A fintech in Berlin. Lead engineer in a team of four.</p>
-                  <p>Their finance team matched bank feeds to invoices by hand, in spreadsheets, every month. I designed a matching engine that clears the routine 98% on its own and sends the odd cases to a review queue people actually like using.</p>
-                  <p class="panel__result">Month-end close went from six days to one.</p>
-                  <p class="panel__stack">Built with TypeScript, Rust, Postgres and AWS Lambda.</p>
+                  <h3>Postverse</h3>
+                  <p class="panel__meta">My SaaS for founders and marketers. Designed, built and launched solo.</p>
+                  <p>Turn a screen recording of your product into short-form videos. An AI persona reacts to your demo, Postverse cuts the two together with on-screen text, and schedules the results to TikTok, Instagram and YouTube.</p>
+                  <p class="panel__result">Live at <a href="https://postverse.io">postverse.io</a> since July 2026.</p>
+                  <p class="panel__stack">Built with Next.js, Supabase, Inngest, fal.ai, Claude, FFmpeg on AWS Lambda, and Stripe.</p>
                 </div>
 <pre class="art" aria-hidden="true">┌────────────────────────────────────┐
-│ LEDGERLINE           close: day 1  │
+│ POSTVERSE         campaign: 6 / 6  │
 ├────────────────────────────────────┤
-│ matched  ████████████████████████  │
-│ review   ██                        │
-│ flagged  ▌                         │
+│ hook  ████                         │
+│ demo      ████████████████         │
+│ text      "wait, it does that?"    │
+│ out   ████████████████████  0:18   │
 ├────────────────────────────────────┤
-│ TX-4471   12,400.00  bank      ok  │
-│ TX-4472    3,180.50  stripe    ok  │
-│ TX-4473      940.00  bank  review  │
-│ TX-4474    7,215.25  wise      ok  │
+│ tiktok      tue 18:00   scheduled  │
+│ instagram   tue 18:30   scheduled  │
+│ youtube     wed 12:00   scheduled  │
 └────────────────────────────────────┘</pre>
               </article>
 
-              <article class="panel" role="tabpanel" id="panel-dockside" aria-labelledby="tab-dockside" tabindex="0">
+              <article class="panel" role="tabpanel" id="panel-muna" aria-labelledby="tab-muna" tabindex="0">
                 <div class="panel__text">
-                  <h3>Dockside</h3>
-                  <p class="panel__meta">Live shipment tracking for a freight forwarder in Rotterdam. Built it solo, then hired and onboarded two engineers.</p>
-                  <p>Dispatchers were juggling five carrier portals and a phone. Dockside pulls positions and events from every carrier into one live map, flags delays before customers notice, and drafts the email when they do.</p>
-                  <p class="panel__result">Status calls to dispatch fell by 70% in the first quarter.</p>
-                  <p class="panel__stack">Built with Go, Kafka, React, Mapbox and Postgres.</p>
-                </div>
-<pre class="art" aria-hidden="true">┌────────────────────────────────────┐
-│ DOCKSIDE                live 12:04 │
-│                                    │
-│  SHA █─────╮                       │
-│            ╰──────╮                │
-│                   ╰──&gt; [214] ──╮   │
-│                                │   │
-│                         RTM █──╯   │
-│                                    │
-│ 214 in transit   3 delayed         │
-└────────────────────────────────────┘</pre>
-              </article>
-
-              <article class="panel" role="tabpanel" id="panel-tidepool" aria-labelledby="tab-tidepool" tabindex="0">
-                <div class="panel__text">
-                  <h3>Tidepool</h3>
-                  <p class="panel__meta">Booking app for a chain of 30 swim schools across the UK. Mobile app, API and admin.</p>
-                  <p>Parents booked lessons over the phone and the waiting list lived in a binder. I built the iOS and Android app, the booking API, and a small admin so front desks can run their classes without calling a developer.</p>
-                  <p class="panel__result">82% of bookings moved to the app within six months.</p>
-                  <p class="panel__stack">Built with React Native, Node, Postgres and Stripe.</p>
+                  <h3>Muna</h3>
+                  <p class="panel__meta">AI tax and expense app for UK sole traders. iOS app, backend and website, built solo.</p>
+                  <p>Photograph a receipt and Muna reads it, files it under the right HMRC category and updates your tax estimate. Ask it a tax question and it answers in plain English, with a link to the HMRC guidance. The tax sums are plain code, never the AI.</p>
+                  <p class="panel__result">On the <a href="https://apps.apple.com/gb/app/muna-sole-trader-tax-ai/id6765894688">App Store</a> since May 2026.</p>
+                  <p class="panel__stack">Built with React Native, Expo, Supabase, Claude, pgvector and RevenueCat.</p>
                 </div>
 <pre class="art" aria-hidden="true">        ╭────────────────────╮
         │ 9:41           ▂▄▆ │
         │                    │
-        │  Tidepool          │
-        │  Sat 12 October    │
+        │  muna.             │
+        │  Tax so far        │
+        │  £2,184            │
+        │  due 31 Jan 2027   │
         │  ────────────────  │
-        │  09:00  Pike     + │
-        │  09:30  Otter    + │
-        │  10:00  Seal  full │
-        │  10:30  Pike     + │
+        │  Train      £38.10 │
+        │  Adobe      £19.97 │
+        │  Printer    £84.00 │
         │                    │
         │  ┌──────────────┐  │
-        │  │     Book     │  │
+        │  │ Scan receipt │  │
         │  └──────────────┘  │
         ╰────────────────────╯</pre>
               </article>
 
-              <article class="panel" role="tabpanel" id="panel-kiln" aria-labelledby="tab-kiln" tabindex="0">
+              <article class="panel" role="tabpanel" id="panel-foldr" aria-labelledby="tab-foldr" tabindex="0">
                 <div class="panel__text">
-                  <h3>Kiln</h3>
-                  <p class="panel__meta">Publishing system for an independent design studio in Copenhagen. Architecture and build.</p>
-                  <p>The studio ships editorial sites for clients every few weeks, and every one started from scratch. Kiln is a shared content model, component library and deploy pipeline they now start every project from.</p>
-                  <p class="panel__result">New client sites launch in days instead of weeks.</p>
-                  <p class="panel__stack">Built with Next.js, Sanity, TypeScript and Vercel.</p>
+                  <h3>Foldr</h3>
+                  <p class="panel__meta">iOS app for saving short-form videos. Designed, built and shipped solo.</p>
+                  <p>Share a TikTok, Instagram Reel or YouTube Short to Foldr and it goes into a folder. It works without an account, syncs once you sign in, and can search what was said in the videos you've saved.</p>
+                  <p class="panel__result">On the <a href="https://apps.apple.com/gb/app/foldr-save-organize-videos/id6774282659">App Store</a> since June 2026.</p>
+                  <p class="panel__stack">Built with React Native, Expo, an iOS share extension, Supabase and RevenueCat.</p>
                 </div>
-<pre class="art" aria-hidden="true">┌───────────┬────────────────────────┐
-│ KILN      │ Spring issue (draft)   │
-│           │                        │
-│ &gt; Stories │ ━━━━━━━━━━━━━━━━━━━━   │
-│   Authors │ ─────────────────────  │
-│   Issues  │ ──────────────────     │
-│   Media   │ ──────────────         │
-│           │ ┌────────┐ ┌────────┐  │
-│           │ │░░░░░░░░│ │▒▒▒▒▒▒▒▒│  │
-│           │ └────────┘ └────────┘  │
-│ [Publish] │ saved 2 seconds ago    │
-└───────────┴────────────────────────┘</pre>
+<pre class="art" aria-hidden="true">        ╭────────────────────╮
+        │ 9:41           ▂▄▆ │
+        │                    │
+        │  Foldr      search │
+        │  ────────────────  │
+        │  ┌──────┐ ┌──────┐ │
+        │  │░░░░░░│ │▒▒▒▒▒▒│ │
+        │  │recipe│ │gym   │ │
+        │  └──────┘ └──────┘ │
+        │  ┌──────┐ ┌──────┐ │
+        │  │▒▒▒▒▒▒│ │░░░░░░│ │
+        │  │travel│ │ideas │ │
+        │  └──────┘ └──────┘ │
+        │                    │
+        │  1 new from TikTok │
+        ╰────────────────────╯</pre>
               </article>
-
-              <article class="panel" role="tabpanel" id="panel-fieldnote" aria-labelledby="tab-fieldnote" tabindex="0">
-                <div class="panel__text">
-                  <h3>Fieldnote</h3>
-                  <p class="panel__meta">Offline-first inspection app for building surveyors in Dublin. Tech lead.</p>
-                  <p>Surveyors work in basements and plant rooms with no signal. Fieldnote keeps everything on the device, syncs when it can, and merges changes without asking anyone to pick between two versions of a report.</p>
-                  <p class="panel__result">Reports are filed the same day instead of the following week.</p>
-                  <p class="panel__stack">Built with SvelteKit, SQLite, CRDTs and Cloudflare Workers.</p>
-                </div>
-<pre class="art" aria-hidden="true">┌────────────────────────────────────┐
-│ FIELDNOTE         offline, 3 saved │
-├────────────────────────────────────┤
-│ Unit 4B, north wall                │
-│                                    │
-│  [x] Damp reading under 18%        │
-│  [x] Window seals intact           │
-│  [ ] Photo of meter box            │
-│  [ ] Surveyor sign-off             │
-│                                    │
-│  3 photos   2 notes   synced 09:12 │
-└────────────────────────────────────┘</pre>
-              </article>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="words" data-nav="work" aria-labelledby="words-title">
-        <div class="screen">
-          <div class="section__head">
-            <h2 class="h2" id="words-title">What clients say</h2>
-          </div>
-          <div class="quotes">
-            <figure class="quote">
-              <blockquote>
-                <p>Stephen joined when our launch date was already on the calendar and our backend was not. We made the date, and a year later the code still makes sense.</p>
-              </blockquote>
-              <figcaption><span aria-hidden="true">-- </span><span>Priya Nair</span><span>CTO, Ledgerline</span></figcaption>
-            </figure>
-            <figure class="quote">
-              <blockquote>
-                <p>The rare engineer who writes the plan down before the code, then actually follows it. Our own team got better just from working next to Stephen.</p>
-              </blockquote>
-              <figcaption><span aria-hidden="true">-- </span><span>Tomas de Vries</span><span>Head of Operations, Dockside</span></figcaption>
-            </figure>
-            <figure class="quote">
-              <blockquote>
-                <p>We hired Stephen to fix one slow page. Three weeks later the whole app was faster, and for the first time we understood why.</p>
-              </blockquote>
-              <figcaption><span aria-hidden="true">-- </span><span>Maren Holm</span><span>Founder, Studio Holm</span></figcaption>
-            </figure>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="services" data-nav="services" aria-labelledby="services-title">
-        <div class="screen">
-          <div class="section__head">
-            <h2 class="h2" id="services-title">How I can help</h2>
-            <p class="section__intro">I work with three or four teams a year, usually in one of these four ways.</p>
-          </div>
-          <dl class="usage">
-            <div class="usage__item">
-              <dt>build</dt>
-              <dd>
-                <p>New products, from the first commit to launch day. We scope it together, I build it in the open, and you end up with a codebase your next hire can read.</p>
-                <p class="usage__terms">Usually 8 to 16 weeks, priced per phase.</p>
-              </dd>
-            </div>
-            <div class="usage__item">
-              <dt>rescue</dt>
-              <dd>
-                <p>For the app that works but nobody dares to change. I map it, add tests where it hurts, and fix the things that wake you up at night.</p>
-                <p class="usage__terms">Starts with a two-week audit and a written report.</p>
-              </dd>
-            </div>
-            <div class="usage__item">
-              <dt>scale</dt>
-              <dd>
-                <p>When traffic, data or the team outgrow the first version. Performance work, infrastructure, and the migrations nobody had time for.</p>
-                <p class="usage__terms">Fixed scope or a monthly retainer.</p>
-              </dd>
-            </div>
-            <div class="usage__item">
-              <dt>advise</dt>
-              <dd>
-                <p>A few hours a week of senior judgement for founders and small teams: architecture reviews, hiring loops, and second opinions before big bets.</p>
-                <p class="usage__terms">From four hours a week, three month minimum.</p>
-              </dd>
-            </div>
-          </dl>
-        </div>
-      </section>
-
-      <section class="section" id="about" data-nav="about" aria-labelledby="about-title">
-        <div class="screen">
-          <div class="about">
-            <!-- Placeholder portrait. Add data-src="your-photo.jpg" and it will be converted to the same 1-bit dither. -->
-            <pre class="portrait" id="portrait" data-cols="56" data-rows="32" aria-hidden="true"></pre>
-            <div class="about__text">
-              <h2 class="h2" id="about-title">About</h2>
-              <p>I'm Stephen. I've been writing software for twelve years: four at a bank, three at a startup that was acquired, and the last five on my own, working with founders and studios across Europe and the US.</p>
-              <p>I do my best work embedded in a small team, close to the people who use the thing. I write things down, ship in small pieces, and would rather delete code than add it.</p>
-              <p>Away from the keyboard I restore old terminals, which probably explains this website.</p>
-
-              <div class="tree">
-                <p class="tree__root">~/toolbox</p>
-                <ul>
-                  <li><span class="tree__key">languages</span><span>TypeScript, Go, Rust, Python, SQL</span></li>
-                  <li><span class="tree__key">frontend</span><span>React, Next.js, Svelte, React Native</span></li>
-                  <li><span class="tree__key">backend</span><span>Node, Postgres, Redis, Kafka, gRPC</span></li>
-                  <li><span class="tree__key">infra</span><span>AWS, Terraform, Docker, Fly.io, Cloudflare</span></li>
-                  <li><span class="tree__key">habits</span><span>Tests first, small pull requests, boring tech</span></li>
-                </ul>
-              </div>
             </div>
           </div>
         </div>
@@ -305,65 +153,46 @@
 
       <section class="section" id="contact" data-nav="contact" aria-labelledby="contact-title">
         <div class="screen">
-          <div class="contact">
-            <div class="contact__text">
-              <h2 class="h2" id="contact-title">Start a project</h2>
-              <p>I take on three or four projects a year so each one gets proper attention. My next opening is January 2027.</p>
-              <p>Tell me what you're building and I'll reply within two working days, even if I'm not the right fit.</p>
-              <p class="contact__email">
-                <a href="mailto:stephen@example.com">stephen@example.com</a>
-              </p>
-              <button class="btn" type="button" id="copy-email">Copy address</button>
-            </div>
+          <div class="section__head">
+            <h2 class="h2" id="contact-title">Start a project</h2>
+            <p class="section__intro">I'm taking on new projects now. Tell me what you're building and I'll get back to you.</p>
+          </div>
 
-            <!-- Placeholder form: wire the submit handler in script.js to your form service. -->
-            <form class="form" id="contact-form" novalidate>
-              <div class="form__row">
-                <div class="field">
-                  <label for="f-name">Your name</label>
-                  <input id="f-name" name="name" type="text" autocomplete="name" required>
-                </div>
-                <div class="field">
-                  <label for="f-email">Email</label>
-                  <input id="f-email" name="email" type="email" autocomplete="email" required aria-describedby="f-email-err">
-                  <p class="field__err" id="f-email-err"></p>
-                </div>
+          <!-- GitHub Pages can't receive form posts, so script.js opens the visitor's email app with this filled in. -->
+          <form class="form" id="contact-form" novalidate>
+            <div class="form__row">
+              <div class="field">
+                <label for="f-name">Your name</label>
+                <input id="f-name" name="name" type="text" autocomplete="name" required>
               </div>
               <div class="field">
-                <label for="f-msg">What are you building?</label>
-                <textarea id="f-msg" name="message" rows="5" required aria-describedby="f-msg-err"></textarea>
-                <p class="field__err" id="f-msg-err"></p>
+                <label for="f-email">Email</label>
+                <input id="f-email" name="email" type="email" autocomplete="email" required aria-describedby="f-email-err">
+                <p class="field__err" id="f-email-err"></p>
               </div>
-              <fieldset class="field choices">
-                <legend>Rough budget</legend>
-                <label class="choice"><input type="radio" name="budget" value="under-10k"><span class="choice__box" aria-hidden="true"></span>Under $10k</label>
-                <label class="choice"><input type="radio" name="budget" value="10-30k"><span class="choice__box" aria-hidden="true"></span>$10k to $30k</label>
-                <label class="choice"><input type="radio" name="budget" value="30k-plus"><span class="choice__box" aria-hidden="true"></span>$30k and up</label>
-                <label class="choice"><input type="radio" name="budget" value="unsure" checked><span class="choice__box" aria-hidden="true"></span>Not sure yet</label>
-              </fieldset>
-              <div class="form__submit">
-                <button class="btn btn--solid" type="submit">Send message</button>
-                <p class="form__status" id="form-status" role="status"></p>
-              </div>
-            </form>
-          </div>
+            </div>
+            <div class="field">
+              <label for="f-msg">What are you building?</label>
+              <textarea id="f-msg" name="message" rows="5" required aria-describedby="f-msg-err"></textarea>
+              <p class="field__err" id="f-msg-err"></p>
+            </div>
+            <fieldset class="field choices">
+              <legend>What do you need?</legend>
+              <label class="choice"><input type="radio" name="need" value="saas"><span class="choice__box" aria-hidden="true"></span>A SaaS or MVP</label>
+              <label class="choice"><input type="radio" name="need" value="mobile"><span class="choice__box" aria-hidden="true"></span>A mobile app</label>
+              <label class="choice"><input type="radio" name="need" value="ai"><span class="choice__box" aria-hidden="true"></span>AI or automation</label>
+              <label class="choice"><input type="radio" name="need" value="web"><span class="choice__box" aria-hidden="true"></span>A website</label>
+              <label class="choice"><input type="radio" name="need" value="unsure" checked><span class="choice__box" aria-hidden="true"></span>Not sure yet</label>
+            </fieldset>
+            <div class="form__submit">
+              <button class="btn btn--solid" type="submit">Send by email</button>
+              <p class="form__status" id="form-status" role="status"></p>
+            </div>
+          </form>
         </div>
       </section>
     </main>
 
-    <footer class="footer">
-      <div class="screen">
-        <div class="footer__inner">
-          <p>&copy; 2026 Stephen. Built by hand with HTML, CSS and a little JavaScript.</p>
-          <ul class="footer__links">
-            <li><a href="https://github.com/">GitHub</a></li>
-            <li><a href="https://www.linkedin.com/">LinkedIn</a></li>
-            <li><a href="mailto:stephen@example.com">Email</a></li>
-          </ul>
-          <p class="footer__hint">Press / anywhere to jump to the terminal.</p>
-        </div>
-      </div>
-    </footer>
   </div>
 
   <nav class="status" aria-label="Sections">
@@ -371,12 +200,9 @@
     <ul class="status__windows">
       <li><a href="#home" data-key="home">home</a></li>
       <li><a href="#work" data-key="work">work</a></li>
-      <li><a href="#services" data-key="services">services</a></li>
-      <li><a href="#about" data-key="about">about</a></li>
       <li><a href="#contact" data-key="contact">contact</a></li>
     </ul>
     <div class="status__right">
-      <button class="status__theme" id="theme-toggle" type="button">invert</button>
       <time class="status__clock" id="clock"></time>
     </div>
   </nav>
