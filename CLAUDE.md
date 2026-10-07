@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-Stephen Ojogbede's freelance portfolio: a single dark, monochrome page in the spirit of an old terminal, to be hosted on GitHub Pages. It is hand-written HTML, CSS and vanilla JS: three files and nothing else. There is no package.json, build step, framework, linter or test suite, so don't add any unless asked.
+Stephen Ojogbede's freelance portfolio: a single dark, monochrome page in the spirit of an old terminal, hosted on GitHub Pages at https://steojo.github.io/portfolio/. It is hand-written HTML, CSS and vanilla JS: three files and nothing else. There is no package.json, build step, framework, linter or test suite, so don't add any unless asked.
 
 To preview, serve the directory and open `http://localhost:8000`. Use this no-cache server rather than plain `python3 -m http.server`. That one sends no `Cache-Control`, so Chrome keeps running a stale `script.js` across ordinary reloads:
 
@@ -20,6 +20,10 @@ s.test(HandlerClass=NoCache, port=8000, bind='localhost')
 ```
 
 The page has three sections, each linked from the status bar: home (greeting, intro and portrait), work (one case study per product) and contact.
+
+## Deploying
+
+Every push to `main` runs `.github/workflows/pages.yml`, which copies `index.html`, `styles.css`, `script.js` and `work/` into `_site` and deploys that to GitHub Pages. It can also be run by hand from the Actions tab. Nothing else in the repo is published. The site is served from `/portfolio/`, so keep asset paths relative (`work/x.webp`, not `/work/x.webp`).
 
 ## How the pieces fit together
 
@@ -44,7 +48,8 @@ The page has three sections, each linked from the status bar: home (greeting, in
 - **Contact details.** The email is in the `EMAIL` constant in `script.js` and hard-coded in `index.html` only in the hero's envelope icon. The contact section deliberately doesn't show the address. The X handle (@steojodev) is only in the hero's X icon. Both icons are `.btn--icon` links with an `aria-label` and a `title`. There is no footer.
 - **What Stephen offers.** Only the hero lede lists the kinds of work. There is no separate services section, and the contact form no longer asks what the visitor needs.
 - **Hero greeting.** The first entry in `LINES` is read from the HTML in `.name__typed`, and an `.sr-only` copy carries the full name for screen readers and search engines, so the animation is hidden from them. Every line in `LINES` must be 16 characters or fewer. The greeting and lede are sized in `cqi` from the `.hero__intro` column. `.name__text` (`min(9.5cqi, 5.5rem)`) keeps 17 characters, including the underscore, on one line, and the lede stays about half that size. Recheck both if a line gets longer.
-- **README.** It repeats the hero lede and the project names and links, so update it when any of those change. Keep it short, and leave Stephen's full name out of it. `.github/hero.png` is a 2x screenshot of the hero at 1440×820. Retake it with headless Chrome (`--force-prefers-reduced-motion` so the greeting holds still) if the hero changes. It lives in `.github/` so Pages doesn't publish it.
+- **Published files.** A new top-level file or folder the page loads (a photo for the portrait, a favicon, a font) must be added to the `cp` line in `.github/workflows/pages.yml`, or it will 404 on the live site.
+- **README.** It repeats the hero lede and the project names and links, so update it when any of those change. Keep it short, and leave Stephen's full name out of it. `.github/hero.png` is a 2x screenshot of the hero at 1440×820. Retake it with headless Chrome (`--force-prefers-reduced-motion` so the greeting holds still) if the hero changes. The deploy workflow doesn't publish it.
 - **ASCII art in `<pre>` blocks.** It is intentionally flush-left in the source, since indentation would render. Escape `>` as `&gt;`. Mark it `aria-hidden` and give it a text equivalent (`.sr-only`) when it carries meaning.
 
 ## Conventions
