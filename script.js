@@ -111,33 +111,6 @@
   greet();
 
   /* ----------------------------------------------------------------
-     Work browser (tabs with arrow-key navigation)
-  ----------------------------------------------------------------- */
-  const tabs = $$('.browser [role="tab"]');
-
-  function selectTab(tab, focus = false) {
-    tabs.forEach((t) => {
-      const on = t === tab;
-      t.setAttribute('aria-selected', String(on));
-      t.tabIndex = on ? 0 : -1;
-      document.getElementById(t.getAttribute('aria-controls')).classList.toggle('is-active', on);
-    });
-    if (focus) tab.focus();
-  }
-
-  tabs.forEach((tab, i) => {
-    tab.addEventListener('click', () => selectTab(tab));
-    tab.addEventListener('keydown', (e) => {
-      const moves = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 };
-      let next = null;
-      if (e.key in moves) next = tabs[(i + moves[e.key] + tabs.length) % tabs.length];
-      if (e.key === 'Home') next = tabs[0];
-      if (e.key === 'End') next = tabs[tabs.length - 1];
-      if (next) { e.preventDefault(); selectTab(next, true); }
-    });
-  });
-
-  /* ----------------------------------------------------------------
      Portrait: a 1-bit dithered image drawn with half blocks, two pixels
      per character. Uses a photo if one is given, otherwise a lit bust.
   ----------------------------------------------------------------- */

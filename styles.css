@@ -225,105 +225,133 @@ a:hover { text-decoration-color: var(--fg); }
 }
 
 /* ------------------------------------------------------------------
-   Work: a two-pane file browser
+   Work: a list of products. Each row opens to its screenshots and
+   details. The screenshots are the one place that breaks the square,
+   monochrome rules, so the products show in their own colours.
 ------------------------------------------------------------------- */
-.browser {
+.projects { border-bottom: 1px solid var(--line); }
+
+.project {
+  border-top: 1px solid var(--line);
+  interpolate-size: allow-keywords; /* lets the open/close animate to "auto" */
+}
+
+.project__row {
   display: grid;
-  grid-template-columns: minmax(12rem, 16rem) minmax(0, 1fr);
-  border: 1px solid var(--line);
-}
-
-.browser__list {
-  display: flex;
-  flex-direction: column;
-  padding: 0.5rem;
-  border-right: 1px solid var(--line);
-}
-
-.browser__tab {
-  display: flex;
-  justify-content: space-between;
-  gap: 2ch;
-  padding: 0.55rem 0.75rem;
-  font-weight: 500;
-  text-align: left;
-  background: none;
-  border: 0;
-  border-radius: 0;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  grid-template-rows: auto auto;
+  align-items: center;
+  column-gap: clamp(1rem, 2.5vw, 1.75rem);
+  padding: clamp(1rem, 2.2vw, 1.4rem) clamp(0.75rem, 1.8vw, 1.25rem);
+  list-style: none;
   cursor: pointer;
 }
 
-.browser__tab:hover { background: var(--hover); }
+.project__row::-webkit-details-marker { display: none; }
+.project__row:hover { background: var(--hover); }
+.project__row:focus-visible { outline-offset: -1px; }
 
-.browser__tab[aria-selected="true"] {
-  color: var(--bg);
-  background: var(--fg);
+.project__icon {
+  grid-area: 1 / 1 / 3 / 2;
+  width: clamp(2.75rem, 5vw, 3.5rem);
+  height: auto;
+  border-radius: 22.5%;
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.1);
 }
 
-.browser__tab:focus-visible { outline-offset: -1px; }
-.browser__kind { font-weight: 400; color: var(--dim); }
-.browser__tab[aria-selected="true"] .browser__kind { color: inherit; opacity: 0.6; }
-
-.browser__hint {
-  margin: auto 0 0;
-  padding: 2rem 0.75rem 0.25rem;
-  font-size: var(--t-sm);
-  color: var(--dim);
-}
-
-.browser__panels { display: grid; }
-
-.panel {
-  grid-area: 1 / 1;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 2rem clamp(2rem, 4vw, 3.5rem);
-  padding: clamp(1.25rem, 3vw, 2.25rem);
-}
-
-.panel:focus-visible { outline-offset: -1px; }
-
-.js .panel:not(.is-active) { visibility: hidden; }
-
-@media (prefers-reduced-motion: no-preference) {
-  .js .panel.is-active { animation: redraw 0.24s steps(8, end) both; }
-}
-
-@keyframes redraw {
-  from { clip-path: inset(0 0 100% 0); }
-  to { clip-path: inset(0); }
-}
-
-.panel__text { max-width: 54ch; }
-
-.panel h3 {
-  margin-bottom: 0.6rem;
-  font-size: var(--t-xl);
-  line-height: 1.1;
-  letter-spacing: -0.04em;
-}
-
-.panel__meta { color: var(--muted); }
-
-.panel__result {
+.project h3 {
+  grid-area: 1 / 2;
+  align-self: end;
   font-size: var(--t-lg);
-  font-weight: 500;
-  line-height: 1.35;
+  line-height: 1.25;
   letter-spacing: -0.02em;
 }
 
-.panel__result::before { content: "=> "; color: var(--dim); font-weight: 400; }
-
-.panel__stack { font-size: var(--t-sm); color: var(--muted); }
-
-.art {
-  margin: 0;
+.project__line {
+  grid-area: 2 / 2;
   align-self: start;
-  font-family: var(--font);
-  font-size: clamp(0.6875rem, 0.55rem + 0.3vw, 0.8125rem);
-  line-height: 1.3;
+  font-size: var(--t-sm);
   color: var(--muted);
 }
+
+.project__kind,
+.project__toggle {
+  grid-row: 1 / 3;
+  font-size: var(--t-sm);
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.project__kind { grid-column: 3; }
+.project__toggle { grid-column: 4; }
+.project__toggle::before { content: "[+]"; white-space: pre; }
+.project[open] .project__toggle::before { content: "[-]"; }
+.project__row:hover .project__toggle,
+.project[open] .project__toggle { color: var(--fg); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .project::details-content {
+    block-size: 0;
+    overflow: clip;
+    transition: block-size 0.28s steps(8, end), content-visibility 0.28s allow-discrete;
+  }
+
+  .project[open]::details-content { block-size: auto; }
+}
+
+.project__detail { padding: 0.5rem 0 clamp(2.5rem, 6vw, 4rem); }
+
+.project__stage {
+  --radius: clamp(0.625rem, 1.4vw, 1.125rem);
+  padding: clamp(1.25rem, 4.5vw, 4rem);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+
+/* web app: the landing page and the dashboard, side by side */
+.project--web .project__stage {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+  align-items: start;
+}
+
+/* iOS apps: the App Store screenshots side by side */
+.shots {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+}
+
+.project__stage img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.06), 0 1.5rem 3rem -1.5rem rgb(0 0 0 / 0.9);
+}
+
+.project__body {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 1.25rem clamp(2rem, 6vw, 5rem);
+  padding-top: clamp(1.5rem, 3.5vw, 2.25rem);
+}
+
+.project__meta { max-width: 38ch; color: var(--muted); }
+.project__text { max-width: 60ch; }
+.project__stack { font-size: var(--t-sm); color: var(--muted); }
+
+.project__links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  margin-top: 1.5rem;
+}
+
+.project__date { font-size: var(--t-sm); color: var(--muted); }
 
 /* ------------------------------------------------------------------
    Portrait, beside the intro
@@ -485,19 +513,32 @@ a:hover { text-decoration-color: var(--fg); }
 /* ------------------------------------------------------------------
    Responsive
 ------------------------------------------------------------------- */
-@media (max-width: 75rem) {
-  .panel { grid-template-columns: minmax(0, 1fr); }
-  .art { order: -1; }
-}
-
 @media (max-width: 56rem) {
   .hero__grid { grid-template-columns: minmax(0, 1fr); }
   .hero__side { justify-items: start; }
-  .browser { grid-template-columns: minmax(0, 1fr); }
-  .browser__list { border-right: 0; border-bottom: 1px solid var(--line); }
-  .browser__hint { display: none; }
+  .project__body { grid-template-columns: minmax(0, 1fr); }
 }
 
 @media (max-width: 40rem) {
   .status__session, .status__clock { display: none; }
+
+  .project__kind { display: none; }
+
+  /* the two screenshots stack */
+  .project--web .project__stage { grid-template-columns: minmax(0, 1fr); }
+
+  /* screenshots scroll sideways, edge to edge */
+  .shots {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 46%;
+    margin-inline: calc(clamp(1.25rem, 4.5vw, 4rem) * -1);
+    padding-inline: clamp(1.25rem, 4.5vw, 4rem);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: clamp(1.25rem, 4.5vw, 4rem);
+    scrollbar-width: none;
+  }
+
+  .shots li { scroll-snap-align: start; }
 }

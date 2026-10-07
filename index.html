@@ -25,7 +25,7 @@
   </script>
 </head>
 <body>
-  <a class="skip" href="#work">Skip to selected work</a>
+  <a class="skip" href="#work">Skip to my work</a>
 
   <div class="page">
     <header class="hero" id="home" data-nav="home">
@@ -60,93 +60,100 @@
       <section class="section" id="work" data-nav="work" aria-labelledby="work-title">
         <div class="screen">
           <div class="section__head">
-            <h2 class="h2" id="work-title">Selected work</h2>
-            <p class="section__intro">Three products I designed, built and launched on my own. Pick one from the list to read about it.</p>
+            <h2 class="h2" id="work-title">My Work</h2>
           </div>
 
-          <div class="browser">
-            <div class="browser__list" role="tablist" aria-label="Projects" aria-orientation="vertical">
-              <button class="browser__tab" role="tab" id="tab-postverse" aria-controls="panel-postverse" aria-selected="true"><span>Postverse</span><span class="browser__kind">web</span></button>
-              <button class="browser__tab" role="tab" id="tab-muna" aria-controls="panel-muna" aria-selected="false" tabindex="-1"><span>Muna</span><span class="browser__kind">ios</span></button>
-              <button class="browser__tab" role="tab" id="tab-foldr" aria-controls="panel-foldr" aria-selected="false" tabindex="-1"><span>Foldr</span><span class="browser__kind">ios</span></button>
-              <p class="browser__hint" aria-hidden="true">Use &uarr; &darr; to browse</p>
-            </div>
-
-            <div class="browser__panels">
-              <article class="panel is-active" role="tabpanel" id="panel-postverse" aria-labelledby="tab-postverse" tabindex="0">
-                <div class="panel__text">
-                  <h3>Postverse</h3>
-                  <p class="panel__meta">My SaaS for founders and marketers. Designed, built and launched solo.</p>
-                  <p>Turn a screen recording of your product into short-form videos. An AI persona reacts to your demo, Postverse cuts the two together with on-screen text, and schedules the results to TikTok, Instagram and YouTube.</p>
-                  <p class="panel__result">Live at <a href="https://postverse.io">postverse.io</a> since July 2026.</p>
-                  <p class="panel__stack">Built with Next.js, Supabase, Inngest, fal.ai, Claude, FFmpeg on AWS Lambda, and Stripe.</p>
+          <div class="projects">
+            <details class="project project--web">
+              <summary class="project__row">
+                <img class="project__icon" src="work/postverse-icon.webp" width="128" height="128" alt="">
+                <h3>Postverse</h3>
+                <span class="project__line">Turns a screen recording into short-form videos, then schedules them.</span>
+                <span class="project__kind">Web app</span>
+                <span class="project__toggle" aria-hidden="true"></span>
+              </summary>
+              <div class="project__detail">
+                <div class="project__stage">
+                  <img src="work/postverse-landing.webp" width="1600" height="909" loading="lazy" alt="The Postverse landing page: Turn one clip into a month of viral videos.">
+                  <img src="work/postverse-campaign.webp" width="1600" height="909" loading="lazy" alt="The Postverse campaign screen, with eight finished videos ready to schedule.">
                 </div>
-<pre class="art" aria-hidden="true">┌────────────────────────────────────┐
-│ POSTVERSE         campaign: 6 / 6  │
-├────────────────────────────────────┤
-│ hook  ████                         │
-│ demo      ████████████████         │
-│ text      "wait, it does that?"    │
-│ out   ████████████████████  0:18   │
-├────────────────────────────────────┤
-│ tiktok      tue 18:00   scheduled  │
-│ instagram   tue 18:30   scheduled  │
-│ youtube     wed 12:00   scheduled  │
-└────────────────────────────────────┘</pre>
-              </article>
-
-              <article class="panel" role="tabpanel" id="panel-muna" aria-labelledby="tab-muna" tabindex="0">
-                <div class="panel__text">
-                  <h3>Muna</h3>
-                  <p class="panel__meta">AI tax and expense app for UK sole traders. iOS app, backend and website, built solo.</p>
-                  <p>Photograph a receipt and Muna reads it, files it under the right HMRC category and updates your tax estimate. Ask it a tax question and it answers in plain English, with a link to the HMRC guidance. The tax sums are plain code, never the AI.</p>
-                  <p class="panel__result">On the <a href="https://apps.apple.com/gb/app/muna-sole-trader-tax-ai/id6765894688">App Store</a> since May 2026.</p>
-                  <p class="panel__stack">Built with React Native, Expo, Supabase, Claude, pgvector and RevenueCat.</p>
+                <div class="project__body">
+                  <p class="project__meta">My SaaS for founders and marketers. Designed, built and launched solo.</p>
+                  <div class="project__text">
+                    <p>Turn a screen recording of your product into short-form videos. An AI persona reacts to your demo, Postverse cuts the two together with on-screen text, and schedules the results to TikTok, Instagram and YouTube.</p>
+                    <p class="project__stack">Built with Next.js, Supabase, Inngest, fal.ai, Claude, FFmpeg on AWS Lambda, and Stripe.</p>
+                    <div class="project__links">
+                      <a class="btn btn--solid" href="https://postverse.io">Visit postverse.io</a>
+                      <span class="project__date">Live since July 2026</span>
+                    </div>
+                  </div>
                 </div>
-<pre class="art" aria-hidden="true">        ╭────────────────────╮
-        │ 9:41           ▂▄▆ │
-        │                    │
-        │  muna.             │
-        │  Tax so far        │
-        │  £2,184            │
-        │  due 31 Jan 2027   │
-        │  ────────────────  │
-        │  Train      £38.10 │
-        │  Adobe      £19.97 │
-        │  Printer    £84.00 │
-        │                    │
-        │  ┌──────────────┐  │
-        │  │ Scan receipt │  │
-        │  └──────────────┘  │
-        ╰────────────────────╯</pre>
-              </article>
+              </div>
+            </details>
 
-              <article class="panel" role="tabpanel" id="panel-foldr" aria-labelledby="tab-foldr" tabindex="0">
-                <div class="panel__text">
-                  <h3>Foldr</h3>
-                  <p class="panel__meta">iOS app for saving short-form videos. Designed, built and shipped solo.</p>
-                  <p>Share a TikTok, Instagram Reel or YouTube Short to Foldr and it goes into a folder. It works without an account, syncs once you sign in, and can search what was said in the videos you've saved.</p>
-                  <p class="panel__result">On the <a href="https://apps.apple.com/gb/app/foldr-save-organize-videos/id6774282659">App Store</a> since June 2026.</p>
-                  <p class="panel__stack">Built with React Native, Expo, an iOS share extension, Supabase and RevenueCat.</p>
+            <details class="project">
+              <summary class="project__row">
+                <img class="project__icon" src="work/muna-icon.webp" width="128" height="128" alt="">
+                <h3>Muna</h3>
+                <span class="project__line">AI tax and expense app for UK sole traders.</span>
+                <span class="project__kind">iOS app</span>
+                <span class="project__toggle" aria-hidden="true"></span>
+              </summary>
+              <div class="project__detail">
+                <div class="project__stage">
+                  <ul class="shots">
+                    <li><img src="work/muna-1.webp" width="540" height="1171" loading="lazy" alt="Muna's home screen, showing the estimated tax due this year."></li>
+                    <li><img src="work/muna-2.webp" width="540" height="1171" loading="lazy" alt="Scanning a receipt with the camera in Muna."></li>
+                    <li><img src="work/muna-3.webp" width="540" height="1171" loading="lazy" alt="Muna's tax breakdown, from gross income to total liability."></li>
+                    <li><img src="work/muna-4.webp" width="540" height="1171" loading="lazy" alt="Asking Muna what can be claimed as a business expense."></li>
+                  </ul>
                 </div>
-<pre class="art" aria-hidden="true">        ╭────────────────────╮
-        │ 9:41           ▂▄▆ │
-        │                    │
-        │  Foldr      search │
-        │  ────────────────  │
-        │  ┌──────┐ ┌──────┐ │
-        │  │░░░░░░│ │▒▒▒▒▒▒│ │
-        │  │recipe│ │gym   │ │
-        │  └──────┘ └──────┘ │
-        │  ┌──────┐ ┌──────┐ │
-        │  │▒▒▒▒▒▒│ │░░░░░░│ │
-        │  │travel│ │ideas │ │
-        │  └──────┘ └──────┘ │
-        │                    │
-        │  1 new from TikTok │
-        ╰────────────────────╯</pre>
-              </article>
-            </div>
+                <div class="project__body">
+                  <p class="project__meta">iOS app, backend and website, built solo.</p>
+                  <div class="project__text">
+                    <p>Photograph a receipt and Muna reads it, files it under the right HMRC category and updates your tax estimate. Ask it a tax question and it answers in plain English, with a link to the HMRC guidance. The tax sums are plain code, never the AI.</p>
+                    <p class="project__stack">Built with React Native, Expo, Supabase, Claude, pgvector and RevenueCat.</p>
+                    <div class="project__links">
+                      <a class="btn btn--solid" href="https://apps.apple.com/gb/app/muna-sole-trader-tax-ai/id6765894688">View on the App Store</a>
+                      <a class="btn" href="https://getmuna.co.uk">getmuna.co.uk</a>
+                      <span class="project__date">Released May 2026</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </details>
+
+            <details class="project">
+              <summary class="project__row">
+                <img class="project__icon" src="work/foldr-icon.webp" width="128" height="128" alt="">
+                <h3>Foldr</h3>
+                <span class="project__line">Saves TikToks, Reels and Shorts into folders you can search.</span>
+                <span class="project__kind">iOS app</span>
+                <span class="project__toggle" aria-hidden="true"></span>
+              </summary>
+              <div class="project__detail">
+                <div class="project__stage">
+                  <ul class="shots">
+                    <li><img src="work/foldr-1.webp" width="540" height="1171" loading="lazy" alt="Foldr's library of saved TikToks, Reels and Shorts."></li>
+                    <li><img src="work/foldr-2.webp" width="540" height="1171" loading="lazy" alt="Saved videos sorted into folders in Foldr."></li>
+                    <li><img src="work/foldr-3.webp" width="540" height="1171" loading="lazy" alt="Searching saved videos by what was said in them."></li>
+                    <li><img src="work/foldr-4.webp" width="540" height="1171" loading="lazy" alt="Filtering saved videos by folder and sorting by platform."></li>
+                  </ul>
+                </div>
+                <div class="project__body">
+                  <p class="project__meta">iOS app for saving short-form videos. Designed, built and shipped solo.</p>
+                  <div class="project__text">
+                    <p>Share a TikTok, Instagram Reel or YouTube Short to Foldr and it goes into a folder. It works without an account, syncs once you sign in, and can search what was said in the videos you've saved.</p>
+                    <p class="project__stack">Built with React Native, Expo, an iOS share extension, Supabase and RevenueCat.</p>
+                    <div class="project__links">
+                      <a class="btn btn--solid" href="https://apps.apple.com/gb/app/foldr-save-organize-videos/id6774282659">View on the App Store</a>
+                      <a class="btn" href="https://foldr-app.com">foldr-app.com</a>
+                      <span class="project__date">Released June 2026</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </details>
           </div>
         </div>
       </section>
