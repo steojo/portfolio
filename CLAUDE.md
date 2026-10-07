@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-Stephen Ojogbede's freelance portfolio: a single dark, monochrome page in the spirit of an old terminal, hosted on GitHub Pages at https://steojo.github.io/portfolio/. It is hand-written HTML, CSS and vanilla JS: three files and nothing else. There is no package.json, build step, framework, linter or test suite, so don't add any unless asked.
+Stephen Ojogbede's freelance portfolio: a single dark, monochrome page in the spirit of an old terminal, hosted on GitHub Pages at https://steojo.github.io/. It is hand-written HTML, CSS and vanilla JS: three files and nothing else. There is no package.json, build step, framework, linter or test suite, so don't add any unless asked.
 
 To preview, serve the directory and open `http://localhost:8000`. Use this no-cache server rather than plain `python3 -m http.server`. That one sends no `Cache-Control`, so Chrome keeps running a stale `script.js` across ordinary reloads:
 
@@ -23,7 +23,7 @@ The page has three sections, each linked from the status bar: home (greeting, in
 
 ## Deploying
 
-Every push to `main` runs `.github/workflows/pages.yml`, which copies `index.html`, `styles.css`, `script.js` and `work/` into `_site` and deploys that to GitHub Pages. It can also be run by hand from the Actions tab. Nothing else in the repo is published. The site is served from `/portfolio/`, so keep asset paths relative (`work/x.webp`, not `/work/x.webp`).
+Every push to `main` runs `.github/workflows/pages.yml`, which copies `index.html`, `styles.css`, `script.js` and `work/` into `_site` and deploys that to GitHub Pages. It can also be run by hand from the Actions tab. Nothing else in the repo is published. The repo is named `steojo.github.io` so the site is served from the root rather than a `/<repo>/` path.
 
 ## How the pieces fit together
 
