@@ -237,9 +237,8 @@
 
     // GitHub Pages has no backend, so hand the message to the visitor's email app
     const name = $('#f-name').value.trim();
-    const need = $('input[name="need"]:checked', contactForm)?.parentElement.textContent.trim() ?? 'Not sure yet';
     const subject = name ? `New project from ${name}` : 'New project';
-    const body = `${message.value.trim()}\n\nWhat I need: ${need}\nReply to: ${email.value.trim()}`;
+    const body = `${message.value.trim()}\n\nReply to: ${email.value.trim()}`;
     location.href = `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     status.textContent = `Opening your email app. If nothing opens, write to ${EMAIL}.`;
   });

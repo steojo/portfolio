@@ -397,7 +397,7 @@ a:hover { text-decoration-color: var(--fg); }
   min-width: 0;
 }
 
-.field label, .field legend { font-size: var(--t-sm); color: var(--muted); }
+.field label { font-size: var(--t-sm); color: var(--muted); }
 
 .field input,
 .field textarea {
@@ -424,37 +424,6 @@ a:hover { text-decoration-color: var(--fg); }
 .field__err { margin: 0; font-size: var(--t-sm); }
 .field__err:empty { display: none; }
 .field__err::before { content: "! "; color: var(--muted); }
-
-.choices {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem 3ch;
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
-
-.choices legend { width: 100%; margin-bottom: 0.5rem; padding: 0; }
-
-.choice {
-  position: relative;
-  display: inline-flex;
-  gap: 1ch;
-  color: var(--muted);
-  cursor: pointer;
-}
-
-.choice input {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-}
-
-.choice__box::before { content: "[ ]"; color: var(--dim); white-space: pre; }
-.choice:has(input:checked) { color: var(--fg); }
-.choice input:checked + .choice__box::before { content: "[x]"; color: var(--fg); }
-.choice input:focus-visible + .choice__box { outline: 1px solid var(--fg); outline-offset: 2px; }
 
 .form__submit {
   display: flex;
@@ -565,10 +534,6 @@ a:hover { text-decoration-color: var(--fg); }
   }
 
   .shots li { scroll-snap-align: start; }
-
-  /* one choice per line, each a full-width tap target */
-  .choices { flex-direction: column; gap: 0; }
-  .choice { padding-block: 0.3rem; }
 }
 
 /* phones: the main button takes the first line, the rest share the second */
