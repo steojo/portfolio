@@ -52,6 +52,7 @@ The page has three sections, each linked from the status bar: home (greeting, in
 - Monochrome, Geist Mono everywhere, square corners, 1px hairlines. The work stages are the one exception: screenshots keep their own colours and rounded corners so the products look like themselves. Animations use `steps()` timing to feel like a terminal redraw. Gate motion behind `@media (prefers-reduced-motion: no-preference)` in CSS.
 - Keep it lean. Stephen has cut gimmicks on purpose: the interactive terminal, the invert toggle, the ASCII name art, the services section, the toolbox list and the footer. Don't bring back novelty widgets or extra sections.
 - CSS classes are BEM-ish (`block__element`, `btn--solid`), and state classes use `is-*` (`is-active`, `is-on`, `is-typing`).
+- Mobile: put hover styles that change a background or border inside `@media (hover: hover)` so they don't stick after a tap. Keep form inputs at 16px or more, or iOS Safari zooms in on focus. The viewport uses `viewport-fit=cover`, so anything that touches a screen edge needs `env(safe-area-inset-*)` padding, as `.screen` and `.status` have. Phone layouts live in the `40rem` and `30rem` media queries at the end of `styles.css`.
 - Copy voice: plain, short sentences, British spelling ("colours"), and no em dashes.
 - All copy describes Stephen's real work. Don't invent clients, testimonials, metrics or results. Don't mention years of experience or link to Upwork; Stephen asked to leave both out.
 
