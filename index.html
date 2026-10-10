@@ -11,18 +11,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap">
   <link rel="stylesheet" href="styles.css">
-  <script>
-    (function () {
-      var d = document.documentElement;
-      d.classList.add('js');
-      try {
-        if (!sessionStorage.getItem('booted') && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-          d.classList.add('booting');
-          setTimeout(function () { d.classList.remove('booting'); }, 4000);
-        }
-      } catch (e) {}
-    })();
-  </script>
 </head>
 <body>
   <a class="skip" href="#work">Skip to my work</a>
@@ -31,13 +19,13 @@
     <header class="hero" id="home" data-nav="home">
       <div class="screen hero__grid">
         <div class="hero__intro">
-          <h1 class="name" data-seq>
+          <h1 class="name">
             <span class="sr-only">Hey, I'm Stephen O.</span>
             <span class="name__text" aria-hidden="true"><span class="name__typed">Hey, I'm Stephen</span><span class="name__cursor">_</span></span>
           </h1>
-          <p class="hero__lede" data-seq>I build SaaS products, mobile apps, AI agents and automations for founders and small teams.</p>
-          <p class="hero__about" data-seq>Based in the UK, working with clients anywhere.</p>
-          <div class="hero__actions" data-seq>
+          <p class="hero__lede">I build SaaS products, mobile apps, AI agents and automations for founders and small teams.</p>
+          <p class="hero__about">Based in the UK, working with clients anywhere.</p>
+          <div class="hero__actions">
             <a class="btn btn--solid" href="#contact">Start a project</a>
             <a class="btn" href="#work">See my work</a>
             <a class="btn btn--icon" href="https://x.com/steojodev" aria-label="Stephen on X, @steojodev" title="@steojodev">
@@ -49,7 +37,7 @@
           </div>
         </div>
 
-        <div class="hero__side" data-seq>
+        <div class="hero__side">
           <!-- Placeholder portrait. Add data-src="your-photo.jpg" and it will be converted to the same 1-bit dither. -->
           <pre class="portrait" id="portrait" data-cols="56" data-rows="32" aria-hidden="true"></pre>
         </div>

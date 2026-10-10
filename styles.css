@@ -159,7 +159,7 @@ a:hover { text-decoration-color: var(--fg); }
   align-items: center;
 }
 
-/* the greeting: typed out on the first visit, then the underscore waits */
+/* the greeting: retyped line by line, the underscore blinks while a line is held */
 .hero__intro { container-type: inline-size; } /* the greeting and lede size from this column */
 
 .name {
@@ -200,9 +200,6 @@ a:hover { text-decoration-color: var(--fg); }
   gap: 0.75rem;
   margin-top: 2rem;
 }
-
-/* intro sequence: first visit per session, never with reduced motion */
-.booting .hero [data-seq]:not(.is-on) { opacity: 0; }
 
 /* ------------------------------------------------------------------
    Sections

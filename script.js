@@ -1,5 +1,4 @@
 (() => {
-  const root = document.documentElement;
   const $ = (sel, el = document) => el.querySelector(sel);
   const $$ = (sel, el = document) => [...el.querySelectorAll(sel)];
   const EMAIL = 'ojogbedestephen@gmail.com';
@@ -30,14 +29,11 @@
 
   /* ----------------------------------------------------------------
      Greeting: "Hey, " stays put while the rest is typed, held, backspaced
-     to the shared prefix and swapped for the next line, forever. The first
-     visit of a session types the first line from scratch, then reveals
-     the rest of the hero.
+     to the shared prefix and swapped for the next line, forever.
   ----------------------------------------------------------------- */
   const nameEl = $('.name');
   const typed = $('.name__typed', nameEl);
   const LINES = [typed.textContent, "Hey, let's build", "Hey, let's talk"]; // 16 characters at most, so the line never wraps
-  const heroSteps = $$('.hero [data-seq]');
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   let heroOnScreen = true;
@@ -65,38 +61,8 @@
 
   const sharedPrefix = (a, b) => { let i = 0; while (i < a.length && a[i] === b[i]) i++; return i; };
 
-  let booted = !root.classList.contains('booting');
-  const SKIP = ['keydown', 'pointerdown', 'wheel'];
-
-  function finishBoot() {
-    if (booted) return;
-    booted = true;
-    typed.textContent = LINES[0];
-    heroSteps.forEach((s) => s.classList.add('is-on'));
-    root.classList.remove('booting');
-    SKIP.forEach((type) => removeEventListener(type, finishBoot));
-  }
-
-  async function boot() {
-    try { sessionStorage.setItem('booted', '1'); } catch {}
-    SKIP.forEach((type) => addEventListener(type, finishBoot, { once: true, passive: true }));
-    typed.textContent = '';
-    nameEl.classList.add('is-on', 'is-typing');
-    await hold(500);
-    await typeTo(LINES[0]);
-    nameEl.classList.remove('is-typing');
-    await hold(450);
-    for (const step of heroSteps.slice(1)) {
-      if (booted) break;
-      step.classList.add('is-on');
-      await sleep(110);
-    }
-    finishBoot();
-  }
-
   async function greet() {
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    if (!booted) await boot();
     for (let i = 0; ; i = (i + 1) % LINES.length) {
       await hold(i === 0 ? 3200 : 2200);
       const next = LINES[(i + 1) % LINES.length];

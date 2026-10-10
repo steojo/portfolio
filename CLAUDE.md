@@ -27,9 +27,7 @@ Every push to `main` runs `.github/workflows/pages.yml`, which copies `index.htm
 
 ## How the pieces fit together
 
-**Boot before paint (`index.html` `<head>`).** An inline script runs before CSS paints. It adds `.js` to `<html>` and, on the first visit of a session (`sessionStorage.booted`, skipped under reduced motion), adds `.booting`. While `.booting` is set, CSS hides every `.hero [data-seq]` until JS adds `.is-on` to it. `boot()` in `script.js` types the first greeting line into `.name__typed`, then reveals the remaining steps. Any key, pointer or wheel event skips to the end, and a 4s timeout in the head script clears `.booting` in case JS fails. Later visits in the same session show everything at once.
-
-**Greeting loop.** After the boot, on every visit, `greet()` cycles through `LINES` forever ("Hey, I'm Stephen", "Hey, let's build", "Hey, let's talk"). It holds each line, backspaces only to the prefix it shares with the next line, then types the rest. The underscore stays solid while `.is-typing` is set and blinks while a line is held. `hold()` pauses the loop while the greeting is off-screen or the tab is hidden. Under reduced motion there is no loop and no blink; the HTML's "Hey, I'm Stephen" just stays.
+**Greeting loop.** The whole hero is visible as soon as the page loads; there is no intro sequence (Stephen found waiting for one slow and had it removed). `greet()` cycles through `LINES` forever ("Hey, I'm Stephen", "Hey, let's build", "Hey, let's talk"). It holds each line, backspaces only to the prefix it shares with the next line, then types the rest. The underscore stays solid while `.is-typing` is set and blinks while a line is held. `hold()` pauses the loop while the greeting is off-screen or the tab is hidden. Under reduced motion there is no loop and no blink; the HTML's "Hey, I'm Stephen" just stays.
 
 **`script.js`** is one IIFE split into commented sections: status bar, greeting, portrait and contact. The first `renderPortrait()` call sits at the end of the portrait section on purpose. It reads `const`/`let` bindings declared there, so calling it earlier would throw.
 
