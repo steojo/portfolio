@@ -365,15 +365,16 @@ a:hover { text-decoration-color: var(--fg); }
 .hero__side { display: grid; justify-items: end; }
 
 .portrait {
-  width: fit-content;
-  margin: 0;
-  padding: 1.25rem;
-  font-family: var(--font);
-  font-size: 10px; /* whole-pixel cells (6 x 13) so the half blocks tile without seams */
-  line-height: 1.3;
-  color: var(--fg);
+  --pad: 1.25rem;
+  display: block;
+  box-sizing: content-box; /* width and aspect-ratio describe the drawing, not its frame */
+  width: min(21rem, 100% - 2 * var(--pad) - 2px); /* full size is six CSS pixels per canvas pixel */
+  aspect-ratio: 21 / 26; /* 56 x 64 pixels, each 12:13 */
+  padding: var(--pad);
+  color: var(--fg); /* the pixels are drawn in this colour */
   background: var(--surface);
   border: 1px solid var(--line);
+  image-rendering: pixelated; /* scale up without blurring the pixels */
 }
 
 /* ------------------------------------------------------------------
@@ -494,8 +495,18 @@ a:hover { text-decoration-color: var(--fg); }
    Responsive
 ------------------------------------------------------------------- */
 @media (max-width: 56rem) {
-  .hero__grid { grid-template-columns: minmax(0, 1fr); }
-  .hero__side { justify-items: start; }
+  /* a small copy of the desktop layout: the greeting runs full width, the portrait sits beside the lede */
+  .hero__grid {
+    container-type: inline-size; /* takes over from .hero__intro, which no longer has a box */
+    grid-template-columns: minmax(0, 1fr) min(50%, 15rem);
+    gap: 0 1.25rem;
+  }
+  .hero__intro { display: contents; }
+  .name, .hero__about, .hero__actions { grid-column: 1 / -1; }
+  .hero__lede { margin-bottom: 0; }
+  .hero__about { margin-top: 1.5rem; }
+  .hero__side { grid-area: 2 / 2; }
+  .portrait { --pad: 0.5rem; }
   .project__body { grid-template-columns: minmax(0, 1fr); }
 }
 

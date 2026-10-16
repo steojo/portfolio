@@ -29,7 +29,7 @@ Every push to `main` runs `.github/workflows/pages.yml`, which copies `index.htm
 
 **Greeting loop.** The whole hero is visible as soon as the page loads; there is no intro sequence (Stephen found waiting for one slow and had it removed). `greet()` cycles through `LINES` forever ("Hey, I'm Stephen", "Hey, let's build", "Hey, let's talk"). It holds each line, backspaces only to the prefix it shares with the next line, then types the rest. The underscore stays solid while `.is-typing` is set and blinks while a line is held. `hold()` pauses the loop while the greeting is off-screen or the tab is hidden. Under reduced motion there is no loop and no blink; the HTML's "Hey, I'm Stephen" just stays.
 
-**`script.js`** is one IIFE split into commented sections: status bar, greeting, portrait and contact. The first `renderPortrait()` call sits at the end of the portrait section on purpose. It reads `const`/`let` bindings declared there, so calling it earlier would throw.
+**`script.js`** is one IIFE split into commented sections: status bar, greeting, portrait and contact. The `drawDithered()` call that draws the portrait sits at the end of the portrait section on purpose. It reads `const` bindings declared there, so calling it earlier would throw.
 
 **Colours.** The site is dark only. Colours are CSS custom properties in `:root`: black, white and a short grey ramp. `--dim` is for decoration only and should not be used for readable text.
 
@@ -37,7 +37,7 @@ Every push to `main` runs `.github/workflows/pages.yml`, which copies `index.htm
 
 **Status bar.** An `IntersectionObserver` watches elements with `data-nav="<key>"` and sets `aria-current` on the `.status a[data-key="<key>"]` link with the same key.
 
-**Portrait.** `#portrait` is a `<pre>` filled with half-block characters (two pixels per character) using a 4×4 Bayer ordered dither. With no image it draws a procedural lit bust. Setting `data-src="photo.jpg"` on it makes the same pipeline dither that photo instead. It sits beside the intro in `.hero__side`, a fixed `24rem` grid column. `renderPortrait` sizes the grid from that parent's width, so the column must never shrink to fit its content (an `auto` track would lock the portrait at its minimum size). On narrow screens the grid shrinks rather than the glyphs. `ASPECT` (0.6 / 1.3) assumes Geist Mono's cell metrics.
+**Portrait.** `#portrait` is a 56×64 `<canvas>` drawn in `--fg` with a 4×4 Bayer ordered dither. With no image it draws a procedural lit bust. Setting `data-src="photo.jpg"` on it makes the same pipeline dither that photo instead. CSS scales the canvas up with `image-rendering: pixelated`, so it's the same drawing at every size and only the squares get smaller. Its pixels are 12:13, not square, so the canvas size, `ASPECT` in `script.js` and the `aspect-ratio` on `.portrait` (21 / 26) must change together. On desktop it sits beside the intro in `.hero__side`, a `24rem` grid column, at six CSS pixels per canvas pixel. Below 56rem the greeting runs full width and the portrait sits beside the lede, in a column up to 15rem wide, so it stays part of the intro rather than a block on its own. To do that, `.hero__intro` becomes `display: contents` and `.hero__grid` takes over as the `cqi` container.
 
 ## Things that must stay in sync
 
@@ -49,7 +49,6 @@ Every push to `main` runs `.github/workflows/pages.yml`, which copies `index.htm
 - **Hero greeting.** The first entry in `LINES` is read from the HTML in `.name__typed`, and an `.sr-only` copy ("Hey, I'm Stephen O.") stands in for it for screen readers and search engines, so the animation is hidden from them. Every line in `LINES` must be 16 characters or fewer. The greeting and lede are sized in `cqi` from the `.hero__intro` column. `.name__text` (`min(9.5cqi, 5.5rem)`) keeps 17 characters, including the underscore, on one line, and the lede stays about half that size. Recheck both if a line gets longer.
 - **Published files.** A new top-level file or folder the page loads (a photo for the portrait, a favicon, a font) must be added to the `cp` line in `.github/workflows/pages.yml`, or it will 404 on the live site.
 - **README.** It repeats the hero lede and the project names and links, so update it when any of those change. Keep it short. `.github/hero.png` is a 2x screenshot of the hero at 1440×820. Retake it with headless Chrome (`--force-prefers-reduced-motion` so the greeting holds still) if the hero changes. The deploy workflow doesn't publish it.
-- **ASCII art in `<pre>` blocks.** It is intentionally flush-left in the source, since indentation would render. Escape `>` as `&gt;`. Mark it `aria-hidden` and give it a text equivalent (`.sr-only`) when it carries meaning.
 
 ## Conventions
 

@@ -77,32 +77,29 @@
   greet();
 
   /* ----------------------------------------------------------------
-     Portrait: a 1-bit dithered image drawn with half blocks, two pixels
-     per character. Uses a photo if one is given, otherwise a lit bust.
+     Portrait: a 1-bit dithered image on a 56 x 64 canvas that CSS scales
+     up without smoothing, so it is the same drawing at every size. Uses
+     a photo if one is given, otherwise a lit bust.
   ----------------------------------------------------------------- */
   const BAYER = [[0, 8, 2, 10], [12, 4, 14, 6], [3, 11, 1, 9], [15, 7, 13, 5]];
-  const HALF = [' ', '▀', '▄', '█']; // index = top pixel + bottom pixel * 2
-  const ASPECT = 0.6 / 1.3; // Geist Mono cell width relative to its line height
+  const ASPECT = 12 / 13; // pixel width relative to height, set by the aspect-ratio of .portrait
 
-  // grid of brightness 0..1 (null = background) to text, ordered-dithered to one bit
-  function toHalfBlocks(grid, cols, rows) {
-    const on = (x, y) => {
-      const v = grid[y * cols + x];
-      if (v === null) return 0;
-      const t = (BAYER[y % 4][x % 4] + 0.5) / 16;
-      return v > t ? 1 : 0;
-    };
-    let text = '';
-    for (let r = 0; r < rows; r++) {
-      for (let c = 0; c < cols; c++) text += HALF[on(c, r * 2) + on(c, r * 2 + 1) * 2];
-      if (r < rows - 1) text += '\n';
-    }
-    return text;
+  const portrait = $('#portrait');
+  const ctx = portrait.getContext('2d', { willReadFrequently: true });
+  const { width: W, height: H } = portrait;
+
+  // brightness 0..1 per pixel (null = background), ordered-dithered to one bit in the text colour
+  function drawDithered(lum) {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = getComputedStyle(portrait).color;
+    lum.forEach((v, i) => {
+      const x = i % W, y = (i - x) / W;
+      if (v !== null && v > (BAYER[y % 4][x % 4] + 0.5) / 16) ctx.fillRect(x, y, 1, 1);
+    });
   }
 
-  function placeholderBust(cols, rows) {
-    const height = rows * 2;
-    const span = (cols * ASPECT) / rows; // x range so the head stays round
+  function placeholderBust() {
+    const span = (W * ASPECT) / H; // x range so the head stays round
     const light = [-0.5, -0.6, 0.62];
     const lit = (nx, ny) => {
       const d = nx * nx + ny * ny;
@@ -111,10 +108,10 @@
       return 0.1 + 0.9 * Math.max(0, nx * light[0] + ny * light[1] + nz * light[2]);
     };
     const grid = [];
-    for (let py = 0; py < height; py++) {
-      for (let px = 0; px < cols; px++) {
-        const x = ((px + 0.5) / cols * 2 - 1) * span;
-        const y = (py + 0.5) / height * 2 - 1;
+    for (let py = 0; py < H; py++) {
+      for (let px = 0; px < W; px++) {
+        const x = ((px + 0.5) / W * 2 - 1) * span;
+        const y = (py + 0.5) / H * 2 - 1;
         let v = null;
         const shoulders = lit(x / 0.72, (y - 0.92) / 0.55);
         const neck = Math.abs(x) < 0.14 && y > -0.08 && y < 0.45 ? 0.1 + 0.3 * Math.sqrt(1 - (x / 0.14) ** 2) : null;
@@ -129,54 +126,28 @@
         grid.push(v);
       }
     }
-    return toHalfBlocks(grid, cols, rows);
+    return grid;
   }
 
-  function photoToHalfBlocks(img, cols, rows) {
-    const height = rows * 2;
-    const canvas = document.createElement('canvas');
-    canvas.width = cols;
-    canvas.height = height;
-    const ctx = canvas.getContext('2d', { willReadFrequently: true });
-    const target = (cols * ASPECT) / rows;
+  function photoBrightness(img) {
+    const target = (W * ASPECT) / H;
     let sw = img.naturalWidth, sh = img.naturalHeight;
     if (sw / sh > target) sw = sh * target; else sh = sw / target;
-    ctx.drawImage(img, (img.naturalWidth - sw) / 2, (img.naturalHeight - sh) / 2, sw, sh, 0, 0, cols, height);
-    const { data } = ctx.getImageData(0, 0, cols, height);
+    ctx.drawImage(img, (img.naturalWidth - sw) / 2, (img.naturalHeight - sh) / 2, sw, sh, 0, 0, W, H);
+    const { data } = ctx.getImageData(0, 0, W, H);
     const lum = [];
     for (let i = 0; i < data.length; i += 4) lum.push((0.2126 * data[i] + 0.7152 * data[i + 1] + 0.0722 * data[i + 2]) / 255);
     const lo = Math.min(...lum), hi = Math.max(...lum);
-    return toHalfBlocks(lum.map((v) => (v - lo) / (hi - lo || 1)), cols, rows);
+    return lum.map((v) => (v - lo) / (hi - lo || 1));
   }
 
-  const portrait = $('#portrait');
-  let portraitImg = null;
+  drawDithered(placeholderBust());
 
-  function renderPortrait() {
-    if (!portrait) return;
-    const maxCols = Number(portrait.dataset.cols) || 56;
-    const maxRows = Number(portrait.dataset.rows) || 32;
-    // shrink the grid on narrow screens instead of the glyphs, which must stay whole-pixel
-    const style = getComputedStyle(portrait);
-    const room = portrait.parentElement.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight) - 2;
-    const cols = Math.max(24, Math.min(maxCols, Math.floor(room / (parseFloat(style.fontSize) * 0.6))));
-    const rowsCount = Math.round(maxRows * (cols / maxCols));
-    portrait.textContent = portraitImg ? photoToHalfBlocks(portraitImg, cols, rowsCount) : placeholderBust(cols, rowsCount);
-  }
-
-  let resizeTimer;
-  addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(renderPortrait, 150);
-  });
-
-  if (portrait?.dataset.src) {
+  if (portrait.dataset.src) {
     const img = new Image();
-    img.onload = () => { portraitImg = img; renderPortrait(); };
+    img.onload = () => drawDithered(photoBrightness(img));
     img.src = portrait.dataset.src;
   }
-
-  renderPortrait();
 
   /* ----------------------------------------------------------------
      Contact
