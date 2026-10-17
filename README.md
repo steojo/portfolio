@@ -11,3 +11,9 @@ One dark, monochrome page in the spirit of an old terminal, with three sections:
 - **Home.** A typed greeting, a short intro and a dithered pixel portrait.
 - **Work.** Screenshots of three products I designed, built and launched solo: [Postverse](https://postverse.io), [Muna](https://apps.apple.com/gb/app/muna-sole-trader-tax-ai/id6765894688) and [Foldr](https://apps.apple.com/gb/app/foldr-save-organize-videos/id6774282659), plus two open-source projects, [Jottr](https://github.com/steojo/jottr) and [Schedulex](https://github.com/steojo/schedulex).
 - **Contact.** A form that opens your email app with your message filled in.
+
+## Copyright
+
+Copyright © 2026 steojo. All rights reserved.
+
+This repository showcases my portfolio. Its original code, design, and content are not offered under an open-source license. Third-party materials retain their respective licenses.
